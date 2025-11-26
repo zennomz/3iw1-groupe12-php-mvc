@@ -14,12 +14,14 @@ class Auth
 
     public function register(): void
     {
-        echo "Auth register";
+        $render = new Render("register", "backoffice");
+        $render->render();
     }
 
-    public function logout(): void
+    public function password_reset(): void
     {
-        echo "Auth logout";
+        $render = new Render("password_reset", "backoffice");
+        $render->render();
     }
 
 }

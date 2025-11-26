@@ -16,10 +16,12 @@
   controller: Auth
   action: login
 
-/logout:
-    controller: Auth
-    action: logout
 
 /register:
   controller: Auth
   action: register
+
+
+/password_reset:
+  controller: Auth
+  action: password_reset
