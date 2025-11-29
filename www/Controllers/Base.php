@@ -17,16 +17,5 @@ class Base
         $render->assign("pseudo", "Prof");
         $render->render();
     }
-
-    public function contact(): void
-    {
-        echo "Base contact";
-    }
-
-
-    public function portfolio(): void
-    {
-        echo "Base portfolio";
-    }
-
+    
 }
