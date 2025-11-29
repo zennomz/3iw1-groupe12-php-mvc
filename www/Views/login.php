@@ -1,11 +1,26 @@
-<form method="post">
-    <label for="username">Nom d'utilisateur :</label>
-    <input type="text" id="username" name="username" required><br>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Projet PHP</title>
+    </head>
+    <body>
 
-    <label for="password">Mot de passe :</label>
-    <input type="password" id="password" name="password" required><br>
+    <?php
+        if(!empty($errors)){
+            echo "<pre>";
+            print_r($errors);
+            echo "</pre>";
+        }
+    ?>
 
-    <button type="submit">Se connecter</button>
-    <a href="/register">S'inscrire</a>
-    <a href="/password_reset">Mot de passe oublié ?</a>
-</form>
+    <form method="post" action="/login">
+        <input type="email" value="<?= $_POST["email"]??"" ?>"  required name="email" placeholder="Email"><br>
+        <input type="password" required name="pwd" placeholder="Password"><br>
+        <input type="submit" value="Login">
+        <a href="/register">Pas encore de compte ? Inscrivez-vous</a>
+        <a href="/password_reset">Mot de passe oublié ?</a>
+    </form>
+
+    </body>
+</html>
