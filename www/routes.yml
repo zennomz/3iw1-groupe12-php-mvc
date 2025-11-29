@@ -2,15 +2,6 @@
   controller: Base
   action: index
 
-/contact:
-  controller: Base
-  action: contact
-
-
-/mon-super-portfolio:
-  controller: Base
-  action: portfolio
-
 
 /login:
   controller: Auth
@@ -25,3 +16,13 @@
 /password_reset:
   controller: Auth
   action: password_reset
+
+
+/admin:
+  controller: Admin
+  action: index
+
+
+/manage_users:
+  controller: Admin
+  action: manage_users
