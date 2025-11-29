@@ -31,7 +31,7 @@ class Auth
                 }else{
                     session_start();
                     $_SESSION["user_id"] = $result["id"];
-                    header("Location: /");
+                    header("Location: /home");
                     exit();
                 }
         }

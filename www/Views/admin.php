@@ -10,5 +10,6 @@
     <ul>
         <li><a href="/manage_users">Manage Users</a></li>
         <li><a href="#">Manage Pages</a></li>
+        <li><a href="/home">Back to accueil</a></li>
 </body>
 </html>

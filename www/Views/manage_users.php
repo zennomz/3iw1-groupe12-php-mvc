@@ -6,7 +6,7 @@
 </head>
 <body>
     <h2>Manage Users</h2>
-    <p>Here you can manage the users of the application.</p>
+    <a href="/admin">Back to Admin Dashboard</a>
     <table border="1">
         <thead>
             <tr>

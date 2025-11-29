@@ -18,6 +18,11 @@
   action: password_reset
 
 
+/home:
+  controller: Base
+  action: home
+
+
 /admin:
   controller: Admin
   action: index

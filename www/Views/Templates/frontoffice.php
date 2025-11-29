@@ -8,9 +8,5 @@
         <p>This is the WEBSITE</p>
 
         <?php include $this->viewPath;?>
-
-        <footer>
-            <marquee>© Skrzypczyk</marquee>
-        </footer>
     </body>
 </html>

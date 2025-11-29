@@ -9,13 +9,14 @@ class Base
 
     public function index(): void
     {
-        $lastname = "SKRZYPCZYK";
-
-
-        $render = new Render("home", "frontoffice");
-        $render->assign("lastname", $lastname);
-        $render->assign("pseudo", "Prof");
+        $render = new Render("home_login", "frontoffice");
         $render->render();
     }
-    
+
+    public function home(): void
+    {
+        $render = new Render("home", "frontoffice");
+        $render->render();
+    }
+
 }

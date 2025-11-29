@@ -1,2 +1,10 @@
-<h2>Welcome <?= $pseudo ?></h2>
-<p>.......</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+    <a href = "/admin">Admin Dashboard</a>
+</body>
+</html>
