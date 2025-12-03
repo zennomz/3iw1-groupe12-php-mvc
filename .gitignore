@@ -1,0 +1,114 @@
+ # ============================================
+# Dépendances et packages
+# ============================================
+/vendor/
+composer.phar
+composer.lock
+
+# ============================================
+# Fichiers de configuration sensibles
+# ============================================
+/www/db.php
+*.env
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# ============================================
+# Fichiers de l'IDE et éditeurs
+# ============================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ============================================
+# Fichiers système
+# ============================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ============================================
+# Fichiers temporaires et logs
+# ============================================
+*.log
+*.tmp
+*.cache
+*.bak
+*.backup
+*.old
+*.orig
+*.save
+*.swp
+*.swo
+*.swn
+*.log.*
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+# ============================================
+# Fichiers de session PHP
+# ============================================
+/sessions/
+session_*
+
+# ============================================
+# Fichiers uploadés et stockage
+# ============================================
+/uploads/
+/storage/
+/public/uploads/
+/public/storage/
+www/uploads/
+www/storage/
+
+# ============================================
+# Docker
+# ============================================
+.dockerignore
+docker-compose.override.yml
+
+# ============================================
+# Fichiers de sauvegarde SQL
+# ============================================
+*.sql.bak
+*.sql.backup
+*.dump
+*.sql.gz
+
+# ============================================
+# Fichiers de test et couverture
+# ============================================
+/coverage/
+.phpunit.result.cache
+.phpunit.cache
+
+# ============================================
+# Fichiers de build et compilation
+# ============================================
+/build/
+/dist/
+/node_modules/
+
+# ============================================
+# Fichiers de configuration locale
+# ============================================
+php.ini.local
+php.ini.backup

@@ -18,6 +18,16 @@
   action: password_reset
 
 
+/verify:
+  controller: Auth
+  action: verify
+
+
+/reset_password:
+  controller: Auth
+  action: reset_password
+
+
 /home:
   controller: Base
   action: home

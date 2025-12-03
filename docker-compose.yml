@@ -13,6 +13,13 @@ services:
       - ./php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
     environment:
       - APACHE_LOG_DIR=/var/log/apache2
+    command: >
+      sh -c "
+        if [ ! -f /var/www/html/vendor/autoload.php ]; then
+          cd /var/www/html && composer require phpmailer/phpmailer --no-interaction
+        fi &&
+        apache2-foreground
+      "
     depends_on:
       - db
 
@@ -42,6 +49,12 @@ services:
       - pgadmin-data:/var/lib/pgadmin
     depends_on:
       - db
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025" 
+      - "1025:1025"
 
 volumes:
   pgdata:

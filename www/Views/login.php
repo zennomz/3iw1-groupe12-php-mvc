@@ -7,10 +7,19 @@
     <body>
 
     <?php
+        if(!empty($successMessage)){
+            echo "<div>";
+            echo htmlspecialchars($successMessage);
+            echo "</div>";
+        }
+        
         if(!empty($errors)){
-            echo "<pre>";
-            print_r($errors);
-            echo "</pre>";
+            echo "<div>";
+            echo "<strong>Erreurs :</strong><ul>";
+            foreach($errors as $error){
+                echo "<li>" . htmlspecialchars($error) . "</li>";
+            }
+            echo "</ul></div>";
         }
     ?>
 

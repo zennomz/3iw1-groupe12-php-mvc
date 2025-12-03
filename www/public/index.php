@@ -40,7 +40,6 @@ $requestUri = strtolower($requestUri);
 
 $routes = yaml_parse_file("../routes.yml");
 
-//Vérifier que l'uri existe dans les routes
 if(empty($routes[$requestUri])){
     die("Aucune route pour cette uri : page 404");
 }

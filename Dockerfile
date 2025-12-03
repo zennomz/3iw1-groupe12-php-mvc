@@ -13,10 +13,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
-# Copier un php.ini personnalisé si besoin (monté via docker-compose)
-# WORKDIR /var/www/html
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Permettre à Apache d'écrire sur le dossier (utile pour uploads / sessions)
+WORKDIR /var/www/html
+
 RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 80
