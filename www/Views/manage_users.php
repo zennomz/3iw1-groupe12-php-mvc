@@ -2,11 +2,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+    <title>Gestion des utilisateurs</title>
 </head>
 <body>
-    <h2>Manage Users</h2>
-    <a href="/admin">Back to Admin Dashboard</a>
+    <h2>Gestion des utilisateurs</h2>
+    <a href="/admin">Retour dans le panel admin</a>
     <table border="1">
         <thead>
             <tr>

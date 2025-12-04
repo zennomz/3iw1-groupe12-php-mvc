@@ -2,10 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Home Login</title>
+    <title>Accueil Authentification</title>
 </head>
 <body>
-    <a href="/login">Login</a> |
-    <a href="/register">Register</a>
+    <a href="/login">Se connecter</a> |
+    <a href="/register">S'inscrire</a>
 </body>
 </html>
