@@ -3,12 +3,19 @@
 namespace App\Controllers;
 
 use App\Core\Render;
+use App\Models\UserModel;
 
 class Admin
 {
 
     public function index(): void
     {
+        session_start();
+        if (empty($_SESSION["user_id"])) {
+            header("Location: /login");
+            exit();
+        }
+        
         $render = new Render("admin", "backoffice");
         $render->render();
     }
@@ -22,19 +29,14 @@ class Admin
         }
 
         require "../db.php";
+        $userModel = new UserModel($pdo);
 
         if (isset($_POST["action"]) && $_POST["action"] === "update") {
             $id = (int)$_POST["user_id"];
             $username = trim($_POST["username"]);
             $isActive = isset($_POST["is_active"]) ? 1 : 0;
 
-            $sql = 'UPDATE public."user" SET username = :username, is_active = :is_active WHERE id = :id';
-            $queryPrepared = $pdo->prepare($sql);
-            $queryPrepared->execute([
-                "username" => $username,
-                "is_active" => $isActive,
-                "id" => $id
-            ]);
+            $userModel->updateUser($id, $username, $isActive);
             header("Location: /manage_users");
             exit();
         }
@@ -42,22 +44,51 @@ class Admin
         if (isset($_POST["action"]) && $_POST["action"] === "delete") {
             $id = (int)$_POST["user_id"];
 
-            $sql = 'DELETE FROM public."user" WHERE id = :id';
-            $queryPrepared = $pdo->prepare($sql);
-            $queryPrepared->execute([
-                "id" => $id
-            ]);
+            $userModel->deleteUser($id);
             header("Location: /manage_users");
             exit();
         }
 
-        $sql = 'SELECT id, username, email, is_active, date_created FROM public."user" ORDER BY id ASC';
-        $queryPrepared = $pdo->prepare($sql);
-        $queryPrepared->execute();
-        $users = $queryPrepared->fetchAll();
+        $users = $userModel->getAllUsers();
 
         $render = new Render("manage_users", "backoffice");
         $render->assign("users", $users);
+        $render->render();
+    }
+
+    public function manage_pages(): void
+    {
+        session_start();
+        if (empty($_SESSION["user_id"])) {
+            header("Location: /login");
+            exit();
+        }
+
+        require "../db.php";
+        $pageModel = new \App\Models\PageModel($pdo);
+
+        if (isset($_POST["action"]) && $_POST["action"] === "update") {
+            $id = (int)$_POST["page_id"];
+            $title = trim($_POST["title"]);
+            $content = trim($_POST["content"]);
+
+            $pageModel->updatePage($id, $title, $content);
+            header("Location: /manage_pages");
+            exit();
+        }
+        
+        if (isset($_POST["action"]) && $_POST["action"] === "delete") {
+            $id = (int)$_POST["page_id"];
+
+            $pageModel->deletePage($id);
+            header("Location: /manage_pages");
+            exit();
+        }
+
+        $pages = $pageModel->getAllPages();
+        
+        $render = new Render("manage_pages", "backoffice");
+        $render->assign("pages", $pages);
         $render->render();
     }
 }
