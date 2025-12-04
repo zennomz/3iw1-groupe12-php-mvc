@@ -13,6 +13,7 @@ function SendConfirmationMail($sendTo, $token)
     $mail = new PHPMailer(true);
 
     try {
+        $mail->CharSet = 'UTF-8';
 
         $mail->isSMTP();
 
@@ -46,6 +47,7 @@ function SendPasswordResetMail($sendTo, $token)
     $mail = new PHPMailer(true);
 
     try {
+        $mail->CharSet = 'UTF-8';
 
         $mail->isSMTP();
 
