@@ -33,6 +33,26 @@
   action: home
 
 
+/pages:
+  controller: Page
+  action: list
+
+
+/page_view:
+  controller: Page
+  action: view
+
+
+/page_create:
+  controller: Page
+  action: create
+
+
+/page_edit:
+  controller: Page
+  action: edit
+
+
 /admin:
   controller: Admin
   action: index
@@ -41,3 +61,8 @@
 /manage_users:
   controller: Admin
   action: manage_users
+
+
+/manage_pages:
+  controller: Admin
+  action: manage_pages
