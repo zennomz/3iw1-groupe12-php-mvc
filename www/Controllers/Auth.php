@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Render;
+use App\Models\UserModel;
 
 require_once __DIR__ . '/../phpMailer_config.php';
 
@@ -14,43 +15,38 @@ class Auth
     public function login(): void
     {
         require "../db.php";
+        $userModel = new UserModel($pdo);
 
-        session_start();
-
-        $successMessage = $_SESSION["success_message"] ?? null;
-        if (isset($_SESSION["success_message"])) {
-            unset($_SESSION["success_message"]);
-        }
+        $successMessage = $_SESSION['success_message'] ?? null;
+        unset($_SESSION['success_message']);
 
         $errors = [];
 
-        if (
-            $_SERVER["REQUEST_METHOD"] === "POST"
-            && count($_POST) == 2
+        if ($_SERVER["REQUEST_METHOD"] === "POST"
+            && count($_POST)==2
             && !empty($_POST["email"])
             && !empty($_POST["pwd"])
-        ) {
+        ){
             $email = strtolower(trim($_POST["email"]));
             $pwd = $_POST["pwd"];
 
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors[] = "Le format de l'email est invalide";
-            } else {
-                $sql = 'SELECT id, pwd, is_active FROM public."user" WHERE email = :email';
-                $queryPrepared = $pdo->prepare($sql);
-                $queryPrepared->execute(["email" => $email]);
-                $result = $queryPrepared->fetch();
-                if (empty($result) || !password_verify($pwd, $result["pwd"])) {
-                    $errors[] = "Email ou mot de passe incorrect";
-                } elseif (!$result["is_active"]) {
-                    $errors[] = "Votre compte n'est pas encore activé. Veuillez vérifier votre email pour activer votre compte.";
-                } else {
-                    $_SESSION["user_id"] = $result["id"];
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
+                $errors[]="Le format de l'email est invalide";
+            }else{
+                $user = $userModel->getUserByEmail($email);
+
+                if(empty($user) || !password_verify($pwd, $user["pwd"])){
+                    $errors[]="Email ou mot de passe incorrect";
+                }elseif(!$user["is_active"]){
+                    $errors[]="Compte non activé. Veuillez vérifier votre email pour activer votre compte.";
+                }else{
+                    session_start();
+                    $_SESSION["user_id"] = $user["id"];
                     header("Location: /home");
                     exit();
                 }
-            }
         }
+    }
         $render = new Render("login", "backoffice");
         $render->assign("errors", $errors);
         $render->assign("successMessage", $successMessage);
@@ -60,6 +56,7 @@ class Auth
     public function register(): void
     {
         require "../db.php";
+        $userModel = new UserModel($pdo);
 
         $errors = [];
         if (
@@ -81,12 +78,9 @@ class Auth
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors[] = "Le format de l'email est invalide";
             } else {
-                $sql = 'SELECT id FROM public."user" WHERE email = :email';
-                $queryPrepared = $pdo->prepare($sql);
-                $queryPrepared->execute(["email" => $email]);
-                $result = $queryPrepared->fetch();
+                $result = $userModel->getUserByEmail($email);
                 if (!empty($result)) {
-                    $errors[] = "L'email existe déjà";
+                    $errors[] = "Un compte avec cet email existe déjà";
                 }
             }
 
@@ -105,17 +99,9 @@ class Auth
 
             if (empty($errors)) {
                 $hashedPwd = password_hash($_POST["pwd"], PASSWORD_BCRYPT);
+                $userModel->createUser($username, $email, $hashedPwd);
                 $verificationToken = bin2hex(random_bytes(32));
-
-                $sql = 'INSERT INTO public."user" (username, email, pwd, verification_token) 
-                    VALUES (:username, :email, :pwd, :verification_token)';
-                $queryPrepared = $pdo->prepare($sql);
-                $queryPrepared->execute([
-                    "username" => $username,
-                    "email" => $email,
-                    "pwd" => $hashedPwd,
-                    "verification_token" => $verificationToken
-                ]);
+                $userModel->setVerificationToken($email, $verificationToken);
 
                 SendConfirmationMail($email, $verificationToken);
 
@@ -134,6 +120,7 @@ class Auth
     public function password_reset(): void
     {
         require "../db.php";
+        $userModel = new UserModel($pdo);
 
         $errors = [];
         $success = false;
@@ -144,23 +131,14 @@ class Auth
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors[] = "Le format de l'email est invalide";
             } else {
-                $sql = 'SELECT id, email FROM public."user" WHERE email = :email';
-                $queryPrepared = $pdo->prepare($sql);
-                $queryPrepared->execute(["email" => $email]);
-                $result = $queryPrepared->fetch();
+                $result = $userModel->getUserByEmail($email);
 
                 if (empty($result)) {
                     $success = true;
                 } else {
                     $resetToken = bin2hex(random_bytes(32));
 
-                    $sql = 'UPDATE public."user" SET verification_token = :token WHERE email = :email';
-                    $queryPrepared = $pdo->prepare($sql);
-                    $queryPrepared->execute([
-                        "token" => $resetToken,
-                        "email" => $email
-                    ]);
-
+                    $userModel->setVerificationToken($email, $resetToken);
                     SendPasswordResetMail($email, $resetToken);
                     $success = true;
                 }
@@ -176,6 +154,7 @@ class Auth
     public function verify(): void
     {
         require "../db.php";
+        $userModel = new UserModel($pdo);
 
         $errors = [];
         $success = false;
@@ -187,10 +166,7 @@ class Auth
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors[] = "Le format de l'email est invalide";
             } else {
-                $sql = 'SELECT id, verification_token, is_active FROM public."user" WHERE email = :email';
-                $queryPrepared = $pdo->prepare($sql);
-                $queryPrepared->execute(["email" => $email]);
-                $result = $queryPrepared->fetch();
+                $result = $userModel->getUserByEmail($email);
 
                 if (empty($result)) {
                     $errors[] = "Aucun compte trouvé avec cet email";
@@ -204,10 +180,7 @@ class Auth
                     } elseif ($result["is_active"]) {
                         $errors[] = "Ce compte est déjà activé";
                     } else {
-                        $sql = 'UPDATE public."user" SET is_active = true, verification_token = NULL WHERE email = :email';
-                        $queryPrepared = $pdo->prepare($sql);
-                        $queryPrepared->execute(["email" => $email]);
-
+                        $userModel->activateUser($email);
                         $success = true;
                     }
                 }
@@ -225,6 +198,7 @@ class Auth
     public function reset_password(): void
     {
         require "../db.php";
+        $userModel = new UserModel($pdo);
 
         $errors = [];
         $success = false;
@@ -238,10 +212,7 @@ class Auth
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors[] = "Le format de l'email est invalide";
             } else {
-                $sql = 'SELECT id, verification_token FROM public."user" WHERE email = :email';
-                $queryPrepared = $pdo->prepare($sql);
-                $queryPrepared->execute(["email" => $email]);
-                $result = $queryPrepared->fetch();
+                $result = $userModel->getUserByEmail($email);
 
                 if (empty($result)) {
                     $errors[] = "Aucun compte trouvé avec cet email";
@@ -269,13 +240,7 @@ class Auth
                             } elseif ($_POST["pwd"] != $_POST["pwdConfirm"]) {
                                 $errors[] = "Le mot de passe de confirmation ne correspond pas";
                             } else {
-                                $hashedPwd = password_hash($_POST["pwd"], PASSWORD_BCRYPT);
-                                $sql = 'UPDATE public."user" SET pwd = :pwd, verification_token = NULL WHERE email = :email';
-                                $queryPrepared = $pdo->prepare($sql);
-                                $queryPrepared->execute([
-                                    "pwd" => $hashedPwd,
-                                    "email" => $email
-                                ]);
+                                $userModel->resetPassword($email, password_hash($_POST["pwd"], PASSWORD_BCRYPT));
 
                                 $success = true;
                                 $showForm = false;

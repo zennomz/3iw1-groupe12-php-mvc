@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Projet PHP</title>
+        <title>Register du Projet</title>
     </head>
     <body>
 
