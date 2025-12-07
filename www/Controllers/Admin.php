@@ -3,7 +3,9 @@
 namespace App\Controllers;
 
 use App\Core\Render;
+use App\Core\Database;
 use App\Models\UserModel;
+use App\Models\PageModel;
 
 class Admin
 {
@@ -16,7 +18,7 @@ class Admin
             exit();
         }
         
-        $render = new Render("admin", "backoffice");
+        $render = new Render("admin", "navbarbackoffice");
         $render->render();
     }
     
@@ -28,13 +30,13 @@ class Admin
             exit();
         }
 
-        require "../db.php";
+        $pdo = Database::getConnection();
         $userModel = new UserModel($pdo);
 
         if (isset($_POST["action"]) && $_POST["action"] === "update") {
             $id = (int)$_POST["user_id"];
             $username = trim($_POST["username"]);
-            $isActive = isset($_POST["is_active"]) ? 1 : 0;
+            $isActive = isset($_POST["is_active"]);
 
             $userModel->updateUser($id, $username, $isActive);
             header("Location: /manage_users");
@@ -51,7 +53,7 @@ class Admin
 
         $users = $userModel->getAllUsers();
 
-        $render = new Render("manage_users", "backoffice");
+        $render = new Render("manage_users", "navbarbackoffice");
         $render->assign("users", $users);
         $render->render();
     }
@@ -64,8 +66,8 @@ class Admin
             exit();
         }
 
-        require "../db.php";
-        $pageModel = new \App\Models\PageModel($pdo);
+        $pdo = Database::getConnection();
+        $pageModel = new PageModel($pdo);
 
         if (isset($_POST["action"]) && $_POST["action"] === "update") {
             $id = (int)$_POST["page_id"];
@@ -87,7 +89,7 @@ class Admin
 
         $pages = $pageModel->getAllPages();
         
-        $render = new Render("manage_pages", "backoffice");
+        $render = new Render("manage_pages", "navbarbackoffice");
         $render->assign("pages", $pages);
         $render->render();
     }

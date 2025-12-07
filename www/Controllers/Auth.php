@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Render;
+use App\Core\Database;
 use App\Models\UserModel;
 
 require_once __DIR__ . '/../phpMailer_config.php';
@@ -14,7 +15,7 @@ class Auth
 {
     public function login(): void
     {
-        require "../db.php";
+        $pdo = Database::getConnection();
         $userModel = new UserModel($pdo);
 
         $successMessage = $_SESSION['success_message'] ?? null;
@@ -47,7 +48,7 @@ class Auth
                 }
         }
     }
-        $render = new Render("login", "backoffice");
+        $render = new Render("login", "authentification");
         $render->assign("errors", $errors);
         $render->assign("successMessage", $successMessage);
         $render->render();
@@ -55,7 +56,7 @@ class Auth
 
     public function register(): void
     {
-        require "../db.php";
+        $pdo = Database::getConnection();
         $userModel = new UserModel($pdo);
 
         $errors = [];
@@ -112,14 +113,14 @@ class Auth
                 exit();
             }
         }
-        $render = new Render("register", "backoffice");
+        $render = new Render("register", "authentification");
         $render->assign("errors", $errors);
         $render->render();
     }
 
     public function password_reset(): void
     {
-        require "../db.php";
+        $pdo = Database::getConnection();
         $userModel = new UserModel($pdo);
 
         $errors = [];
@@ -145,7 +146,7 @@ class Auth
             }
         }
 
-        $render = new Render("password_reset", "backoffice");
+        $render = new Render("password_reset", "authentification");
         $render->assign("errors", $errors);
         $render->assign("success", $success);
         $render->render();
@@ -153,7 +154,7 @@ class Auth
 
     public function verify(): void
     {
-        require "../db.php";
+        $pdo = Database::getConnection();
         $userModel = new UserModel($pdo);
 
         $errors = [];
@@ -189,7 +190,7 @@ class Auth
             $errors[] = "Les paramètres email et token sont requis";
         }
 
-        $render = new Render("verify", "backoffice");
+        $render = new Render("verify", "authentification");
         $render->assign("errors", $errors);
         $render->assign("success", $success);
         $render->render();
@@ -197,7 +198,7 @@ class Auth
 
     public function reset_password(): void
     {
-        require "../db.php";
+        $pdo = Database::getConnection();
         $userModel = new UserModel($pdo);
 
         $errors = [];
@@ -259,10 +260,19 @@ class Auth
             $errors[] = "Les paramètres email et token sont requis";
         }
 
-        $render = new Render("reset_password", "backoffice");
+        $render = new Render("reset_password", "authentification");
         $render->assign("errors", $errors);
         $render->assign("success", $success);
         $render->assign("showForm", $showForm);
         $render->render();
+    }
+
+    public function logout(): void
+    {
+        session_start();
+        session_unset();
+        session_destroy();
+        header("Location: /login");
+        exit();
     }
 }

@@ -90,7 +90,7 @@ class UserModel
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             'username' => $username,
-            'is_active' => $isActive,
+            'is_active' => $isActive ? 1 : 0,
             'id' => $userId
         ]);
     }

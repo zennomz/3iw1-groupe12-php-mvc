@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Render;
+use App\Core\Database;
 use App\Models\PageModel;
 
 class Page
@@ -16,12 +17,12 @@ class Page
             exit();
         }
 
-        require "../db.php";
+        $pdo = Database::getConnection();
 
         $pageModel = new PageModel($pdo);
         $pages = $pageModel->getAllPages();
 
-        $render = new Render("home", "frontoffice");
+        $render = new Render("home", "navbarfrontoffice");
         $render->assign("pages", $pages);
         $render->render();
     }
@@ -34,7 +35,7 @@ class Page
             exit();
         }
         
-        require "../db.php";
+        $pdo = Database::getConnection();
         
         if (!isset($_GET['id'])) {
             die ('Page introuvable');
@@ -48,7 +49,7 @@ class Page
             die ('Page introuvable');
         }
 
-        $render = new Render("page_view", "frontoffice");
+        $render = new Render("page_view", "navbarfrontoffice");
         $render->assign("page", $page);
         $render->render();
     }
@@ -61,7 +62,7 @@ class Page
             exit();
         }
 
-        require "../db.php";
+        $pdo = Database::getConnection();
         $pageModel = new PageModel($pdo);
 
         $errors = [];
@@ -89,7 +90,7 @@ class Page
             }
         }
 
-        $render = new Render("page_create", "backoffice");
+        $render = new Render("page_create", "navbarfrontoffice");
         $render->assign("errors", $errors);
         $render->render();
     }
