@@ -28,6 +28,11 @@
   action: reset_password
 
 
+/logout:
+  controller: Auth
+  action: logout
+
+
 /home:
   controller: Base
   action: home

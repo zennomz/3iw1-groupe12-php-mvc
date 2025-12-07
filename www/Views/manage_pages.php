@@ -6,7 +6,7 @@
 </head>
 <body>
     <h2>Gérer les pages</h2>
-    <a href="/admin">Retour au tableau de bord admin</a>
+    <a href="/admin">Retour dans le panel admin</a>
     <table border="1">
         <thead>
             <tr>

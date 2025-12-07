@@ -5,7 +5,6 @@
     <title>Accueil</title>
 </head>
 <body>
-    <a href = "/admin">Panel admin</a>
     <h1>Liste des pages</h1>
     <br>
     <a href="/page_create">Créer une nouvelle page</a>
@@ -17,11 +16,9 @@
         <ul>
             <?php foreach ($pages as $page): ?>
                 <li>
-                    <a href="/page_view?id=<?= $page['id'] ?>">
-                        <?= $page['title'] ?>
-                        <?= $page['date_created'] ?>
-                        <?= $page['author_name'] ?>
-                    </a>
+                    <h2><?= $page['title'] ?></h2>
+                    <p>Créer le <?= $page['date_created'] ?></p>
+                    <p>Par l'auteur : <?= $page['author_name'] ?></p>
                     <a href="/page_view?id=<?= $page['id'] ?>">Voir</a>
                 </li>
             <?php endforeach; ?>
