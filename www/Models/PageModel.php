@@ -13,27 +13,28 @@ class PageModel
 
     public function createPage(string $title, string $content, int $authorId)
     {
-        $sql = 'INSERT INTO public."page" (title, content, author_id, date_created) VALUES (:title, :content, :author_id, NOW())';
+        $sql = 'INSERT INTO public."page" (title, content, author_id, date_created, slug) VALUES (:title, :content, :author_id, NOW(), :slug)';
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             'title' => $title,
             'content' => $content,
-            'author_id' => $authorId
+            'author_id' => $authorId,
+            'slug' => strtolower(preg_replace('/[^A-Za-z0-9-]+/', '-', $title))
         ]);
     }
 
     public function getAllPages()
     {
-        $sql = 'SELECT page.id, page.title, page.content, page.author_id, page.date_created, page.date_updated, "user".username AS author_name FROM public."page" JOIN public."user" ON page.author_id = "user".id ORDER BY page.id ASC';
+        $sql = 'SELECT page.id, page.title, page.content, page.author_id, page.date_created, page.date_updated, page.slug, "user".username AS author_name FROM public."page" JOIN public."user" ON page.author_id = "user".id ORDER BY page.id ASC';
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function getPageById(int $pageId)
+    public function getPageBySlug(string $slug)
     {
-        $sql = 'SELECT page.id, page.title, page.content, page.author_id, page.date_created, page.date_updated, "user".username AS author_name FROM public."page" JOIN public."user" ON page.author_id = "user".id WHERE page.id = :id';
+        $sql = 'SELECT page.id, page.title, page.content, page.author_id, page.date_created, page.date_updated, "user".username AS author_name FROM public."page" JOIN public."user" ON page.author_id = "user".id WHERE page.slug = :slug';
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $pageId]);
+        $stmt->execute(['slug' => $slug]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 

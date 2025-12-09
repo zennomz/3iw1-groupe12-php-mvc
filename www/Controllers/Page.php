@@ -27,7 +27,7 @@ class Page
         $render->render();
     }
 
-    public function view(): void
+    public function view(string $slug): void
     {
         session_start();
         if (empty($_SESSION["user_id"])) {
@@ -36,14 +36,9 @@ class Page
         }
         
         $pdo = Database::getConnection();
-        
-        if (!isset($_GET['id'])) {
-            die ('Page introuvable');
-        }
-
-        $id = (int)$_GET['id'];
         $pageModel = new PageModel($pdo);
-        $page = $pageModel->getPageById($id);
+
+        $page = $pageModel->getPageBySlug($slug);
 
         if (!$page) {
             die ('Page introuvable');

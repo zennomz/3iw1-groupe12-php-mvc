@@ -20,7 +20,8 @@ CREATE TABLE "page" (
     content TEXT NOT NULL,
     author_id INTEGER REFERENCES "user"(id),
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    date_updated DATE
+    date_updated DATE,
+    slug VARCHAR(100) UNIQUE NOT NULL
 );
 
 ALTER TABLE "page" OWNER TO devuser;
