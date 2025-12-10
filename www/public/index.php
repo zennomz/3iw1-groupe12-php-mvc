@@ -16,6 +16,29 @@ $requestUri = strtolower($requestUri);
 
 $routes = yaml_parse_file("../routes.yml");
 
+if(strpos($requestUri, "/page/") === 0){
+    $slug = substr($requestUri, strlen("/page/"));
+    
+    if (!file_exists("../Controllers/Page.php")) {
+        die("Aucun fichier controller pour cette uri");
+    }
+    include "../Controllers/Page.php";
+
+    $controller = "App\\Controllers\\Page";
+    if (!class_exists($controller)) {
+        die("La classe du controller n'existe pas");
+    }
+
+    $objetController = new $controller();
+
+    if (!method_exists($objetController, "view")) {
+        die("La methode du controller n'existe pas");
+    }
+
+    $objetController->view($slug);
+    exit();
+}
+
 if(empty($routes[$requestUri])){
     die("Aucune route pour cette uri : page 404");
 }
