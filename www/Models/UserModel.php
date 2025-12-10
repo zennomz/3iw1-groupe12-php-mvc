@@ -26,7 +26,7 @@ class UserModel
 
     public function getUserByEmail(string $email)
     {
-        $sql = 'SELECT id, username, email, pwd, is_active, verification_token FROM public."user" WHERE email = :email';
+        $sql = 'SELECT id, username, email, pwd, role, is_active, verification_token FROM public."user" WHERE email = :email';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['email' => $email]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -79,7 +79,7 @@ class UserModel
 
     public function getAllUsers()
     {
-        $sql = 'SELECT id, username, email, is_active, date_created FROM public."user" ORDER BY id ASC';
+        $sql = 'SELECT id, username, email, role, is_active, date_created FROM public."user" ORDER BY id ASC';
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }

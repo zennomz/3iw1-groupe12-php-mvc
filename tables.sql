@@ -6,6 +6,7 @@ CREATE TABLE public."user" (
     username VARCHAR(50),
     email VARCHAR(320) NOT NULL,
     pwd VARCHAR(255) NOT NULL,
+    role VARCHAR(10) NOT NULL DEFAULT 'user',
     is_active BOOLEAN DEFAULT FALSE,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     date_updated DATE,

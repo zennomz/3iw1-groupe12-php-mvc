@@ -4,7 +4,7 @@
     <title>Projet MVC</title>
 </head>
 <body>
-    <h1>Projet PHP MVC</h1>
+    <h1>Panel Admin - Projet PHP MVC</h1>
     <nav>
         <ul>
             <li><a href="/home">Quitter le Panel</a></li>

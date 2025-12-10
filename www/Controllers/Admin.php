@@ -17,6 +17,12 @@ class Admin
             header("Location: /login");
             exit();
         }
+
+        if($_SESSION["role"] !== "admin") {
+            header("Location: /home");
+            exit();
+        }
+        
         
         $render = new Render("admin", "navbarbackoffice");
         $render->render();
@@ -27,6 +33,11 @@ class Admin
         session_start();
         if (empty($_SESSION["user_id"])) {
             header("Location: /login");
+            exit();
+        }
+
+        if($_SESSION["role"] !== "admin") {
+            header("Location: /home");
             exit();
         }
 
@@ -66,6 +77,10 @@ class Admin
             exit();
         }
 
+        if($_SESSION["role"] !== "admin") {
+            header("Location: /home");
+            exit();
+        }
         $pdo = Database::getConnection();
         $pageModel = new PageModel($pdo);
 
