@@ -26,7 +26,7 @@ class UserModel
 
     public function getUserByEmail(string $email)
     {
-        $sql = 'SELECT id, username, email, pwd, is_active, verification_token FROM public."user" WHERE email = :email';
+        $sql = 'SELECT id, username, email, pwd, role, is_active, verification_token FROM public."user" WHERE email = :email';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['email' => $email]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -79,18 +79,19 @@ class UserModel
 
     public function getAllUsers()
     {
-        $sql = 'SELECT id, username, email, is_active, date_created FROM public."user" ORDER BY id ASC';
+        $sql = 'SELECT id, username, email, role, is_active, date_created FROM public."user" ORDER BY id ASC';
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function updateUser(int $userId, string $username, bool $isActive)
+    public function updateUser(int $userId, string $username,string $role, bool $isActive)
     {
-        $sql = 'UPDATE public."user" SET username = :username, is_active = :is_active WHERE id = :id';
+        $sql = 'UPDATE public."user" SET username = :username, role = :role, is_active = :is_active WHERE id = :id';
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             'username' => $username,
             'is_active' => $isActive ? 1 : 0,
+            'role' => $role,
             'id' => $userId
         ]);
     }
