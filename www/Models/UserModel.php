@@ -84,13 +84,14 @@ class UserModel
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function updateUser(int $userId, string $username, bool $isActive)
+    public function updateUser(int $userId, string $username,string $role, bool $isActive)
     {
-        $sql = 'UPDATE public."user" SET username = :username, is_active = :is_active WHERE id = :id';
+        $sql = 'UPDATE public."user" SET username = :username, role = :role, is_active = :is_active WHERE id = :id';
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             'username' => $username,
             'is_active' => $isActive ? 1 : 0,
+            'role' => $role,
             'id' => $userId
         ]);
     }

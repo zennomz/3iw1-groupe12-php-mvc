@@ -29,7 +29,14 @@
                         <td>
                             <input type="checkbox" name="is_active" <?= $user['is_active'] ? 'checked' : '' ?>>
                         </td>
+                        <td>
+                            <select name="role">
+                                <option value="user" <?= $user['role'] === 'user' ? 'selected' : '' ?>>User</option>
+                                <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
+                            </select>
+                        </td>
                         <td><?= $user['date_created'] ?></td>
+                        
                         <td>
                             <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                             <input type="hidden" name="action" value="update">

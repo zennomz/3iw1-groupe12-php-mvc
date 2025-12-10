@@ -18,16 +18,16 @@ class Admin
             exit();
         }
 
-        if($_SESSION["role"] !== "admin") {
+        if ($_SESSION["role"] !== "admin") {
             header("Location: /home");
             exit();
         }
-        
-        
+
+
         $render = new Render("admin", "navbarbackoffice");
         $render->render();
     }
-    
+
     public function manage_users(): void
     {
         session_start();
@@ -36,7 +36,7 @@ class Admin
             exit();
         }
 
-        if($_SESSION["role"] !== "admin") {
+        if ($_SESSION["role"] !== "admin") {
             header("Location: /home");
             exit();
         }
@@ -48,8 +48,15 @@ class Admin
             $id = (int)$_POST["user_id"];
             $username = trim($_POST["username"]);
             $isActive = isset($_POST["is_active"]);
+            $role = trim($_POST["role"]);
 
-            $userModel->updateUser($id, $username, $isActive);
+            $userModel->updateUser($id, $username, $role, $isActive);
+
+            session_destroy();
+            session_start();
+            $_SESSION["user_id"] = $id;
+            $_SESSION["role"] = $role;
+
             header("Location: /manage_users");
             exit();
         }
@@ -77,7 +84,7 @@ class Admin
             exit();
         }
 
-        if($_SESSION["role"] !== "admin") {
+        if ($_SESSION["role"] !== "admin") {
             header("Location: /home");
             exit();
         }
@@ -93,7 +100,7 @@ class Admin
             header("Location: /manage_pages");
             exit();
         }
-        
+
         if (isset($_POST["action"]) && $_POST["action"] === "delete") {
             $id = (int)$_POST["page_id"];
 
@@ -103,7 +110,7 @@ class Admin
         }
 
         $pages = $pageModel->getAllPages();
-        
+
         $render = new Render("manage_pages", "navbarbackoffice");
         $render->assign("pages", $pages);
         $render->render();

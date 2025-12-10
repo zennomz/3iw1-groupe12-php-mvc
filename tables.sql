@@ -1,12 +1,14 @@
 DROP TABLE IF EXISTS "page";
 DROP TABLE IF EXISTS "user" CASCADE;
 
+CREATE type enum_role as ENUM ('user', 'admin');
+
 CREATE TABLE public."user" (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50),
     email VARCHAR(320) NOT NULL,
     pwd VARCHAR(255) NOT NULL,
-    role VARCHAR(10) NOT NULL DEFAULT 'user',
+    role enum_role NOT NULL DEFAULT 'user',
     is_active BOOLEAN DEFAULT FALSE,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     date_updated DATE,
@@ -14,6 +16,7 @@ CREATE TABLE public."user" (
 );
 
 ALTER TABLE "user" OWNER TO devuser;
+
 
 CREATE TABLE "page" (
     id SERIAL PRIMARY KEY,
