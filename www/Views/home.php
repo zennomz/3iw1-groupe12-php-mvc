@@ -19,7 +19,7 @@
                     <h2><?= $page['title'] ?></h2>
                     <p>Créer le <?= $page['date_created'] ?></p>
                     <p>Par l'auteur : <?= $page['author_name'] ?></p>
-                    <a href="/page/<?= $page['slug'] ?>">Voir</a>
+                    <a href="/page/<?= urlencode($page['slug']) ?>">Voir</a>
                 </li>
             <?php endforeach; ?>
         </ul>

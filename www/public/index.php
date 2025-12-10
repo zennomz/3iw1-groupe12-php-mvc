@@ -10,14 +10,15 @@ spl_autoload_register(function ($class){
 });
 
 $requestUri = strtok($_SERVER["REQUEST_URI"], "?");
+$requestUri = urldecode($requestUri);
 if(strlen($requestUri)>1)
     $requestUri = rtrim($requestUri, "/");
-$requestUri = strtolower($requestUri);
 
 $routes = yaml_parse_file("../routes.yml");
 
 if(strpos($requestUri, "/page/") === 0){
     $slug = substr($requestUri, strlen("/page/"));
+    $slug = urldecode($slug);
     
     if (!file_exists("../Controllers/Page.php")) {
         die("Aucun fichier controller pour cette uri");

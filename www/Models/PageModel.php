@@ -19,7 +19,7 @@ class PageModel
             'title' => $title,
             'content' => $content,
             'author_id' => $authorId,
-            'slug' => strtolower(preg_replace('/[^A-Za-z0-9-]+/', '-', $title))
+            'slug' => $title
         ]);
     }
 
