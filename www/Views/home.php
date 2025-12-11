@@ -17,9 +17,13 @@
             <?php foreach ($pages as $page): ?>
                 <li>
                     <h2><?= $page['title'] ?></h2>
-                    <p>Créer le <?= $page['date_created'] ?></p>
+                    <p>Crée le <?= $page['date_created'] ?></p>
                     <p>Par l'auteur : <?= $page['author_name'] ?></p>
                     <a href="/page/<?= urlencode($page['slug']) ?>">Voir</a>
+                    <?php if (!empty($_SESSION['user_id']) && $_SESSION['user_id'] == $page['author_id']): ?>
+                        | <a href="/edit_page/<?= urlencode($page['slug']) ?>">Éditer</a>
+                        | <a href="/delete_page/<?= urlencode($page['slug']) ?>" onclick="return confirm('Supprimer cette page ?');">Supprimer</a>
+                    <?php endif; ?>
                 </li>
             <?php endforeach; ?>
         </ul>

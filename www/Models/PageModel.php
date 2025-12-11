@@ -32,7 +32,7 @@ class PageModel
 
     public function getPageBySlug(string $slug)
     {
-        $sql = 'SELECT page.id, page.title, page.content, page.author_id, page.date_created, page.date_updated, "user".username AS author_name FROM public."page" JOIN public."user" ON page.author_id = "user".id WHERE page.slug = :slug';
+        $sql = 'SELECT page.id, page.title, page.content, page.author_id, page.slug, page.date_created, page.date_updated, "user".username AS author_name FROM public."page" JOIN public."user" ON page.author_id = "user".id WHERE page.slug = :slug';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['slug' => $slug]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);

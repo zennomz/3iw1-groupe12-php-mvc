@@ -58,6 +58,16 @@
   action: edit
 
 
+/edit_page:
+  controller: Page
+  action: edit
+
+
+/delete_page:
+  controller: Page
+  action: delete
+
+
 /admin:
   controller: Admin
   action: index

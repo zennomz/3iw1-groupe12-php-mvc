@@ -16,28 +16,38 @@ if(strlen($requestUri)>1)
 
 $routes = yaml_parse_file("../routes.yml");
 
-if(strpos($requestUri, "/page/") === 0){
-    $slug = substr($requestUri, strlen("/page/"));
-    $slug = urldecode($slug);
-    
-    if (!file_exists("../Controllers/Page.php")) {
-        die("Aucun fichier controller pour cette uri");
+$dynamicRoutes = [
+    "/page/"       => "view",
+    "/edit_page/"  => "edit",
+    "/delete_page/" => "delete"
+];
+
+foreach ($dynamicRoutes as $prefix => $method) {
+
+    if (strpos($requestUri, $prefix) === 0) {
+
+        $slug = substr($requestUri, strlen($prefix));
+
+        $controllerFile = "../Controllers/Page.php";
+        if (!file_exists($controllerFile)) {
+            die("Aucun fichier controller pour cette uri");
+        }
+        include $controllerFile;
+
+        $controllerClass = "App\\Controllers\\Page";
+        if (!class_exists($controllerClass)) {
+            die("La classe du controller n'existe pas");
+        }
+
+        $controller = new $controllerClass();
+
+        if (!method_exists($controller, $method)) {
+            die("La methode du controller n'existe pas");
+        }
+
+        $controller->$method($slug);
+        exit();
     }
-    include "../Controllers/Page.php";
-
-    $controller = "App\\Controllers\\Page";
-    if (!class_exists($controller)) {
-        die("La classe du controller n'existe pas");
-    }
-
-    $objetController = new $controller();
-
-    if (!method_exists($objetController, "view")) {
-        die("La methode du controller n'existe pas");
-    }
-
-    $objetController->view($slug);
-    exit();
 }
 
 if(empty($routes[$requestUri])){

@@ -89,4 +89,81 @@ class Page
         $render->assign("errors", $errors);
         $render->render();
     }
+
+    public function edit(string $slug): void
+    {
+        session_start();
+        if (empty($_SESSION["user_id"])) {
+            header("Location: /login");
+            exit();
+        }
+
+        $pdo = Database::getConnection();
+        $pageModel = new PageModel($pdo);
+
+        $page = $pageModel->getPageBySlug($slug);
+        if (!$page) {
+            die("Page introuvable");
+        }
+
+        if ($page['author_id'] != $_SESSION['user_id']) {
+            die("Accès interdit");
+        }
+
+        $errors = [];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $title   = trim($_POST['title']   ?? '');
+            $content = trim($_POST['content'] ?? '');
+
+            if ($title === '' || $content === '') {
+                $errors[] = "Tous les champs sont obligatoires.";
+            }
+
+            if (strlen($title) > 100) {
+                $errors[] = "Le titre ne peut pas dépasser 100 caractères.";
+            }
+
+            if (empty($errors)) {
+                $pageModel->updatePage((int)$page['id'], $title, $content);
+                header("Location: /pages");
+                exit();
+            }
+            $page['title']   = $title;
+            $page['content'] = $content;
+        }
+
+        $render = new Render("edit_page", "navbarfrontoffice");
+        $render->assign("errors", $errors);
+        $render->assign("page", $page);
+        $render->render();
+    }
+
+
+    public function delete(string $slug): void
+    {
+        session_start();
+        if (empty($_SESSION["user_id"])) {
+            header("Location: /login");
+            exit();
+        }
+
+        $pdo = Database::getConnection();
+        $pageModel = new PageModel($pdo);
+
+        $page = $pageModel->getPageBySlug($slug);
+        if (!$page) {
+            die("Page introuvable");
+        }
+
+        if ($page['author_id'] != $_SESSION['user_id']) {
+            die("Accès interdit");
+        }
+
+        $pageModel->deletePage((int)$page['id']);
+
+        header("Location: /pages");
+        exit();
+    }
+
 }
